@@ -19,6 +19,7 @@
     [Inject]
     public IJSRuntime JSRuntime { get; set; }
 
+
     /// <summary>
     /// Привязка данных графа к визуальному отображению
     /// </summary>
@@ -35,7 +36,7 @@
             foreach (var vertex in ModelService.Graph.Verticies)
             {
                 await JSRuntime.UpdateVertex(vertex,
-                    (Algorithm?.States != null) ? Algorithm.States[vertex] : SearchState.None); 
+                    (Algorithm?.States != null) ? Algorithm.States[vertex] : SearchState.None);
             }
         }
         await base.OnAfterRenderAsync(firstRender);

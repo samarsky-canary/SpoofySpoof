@@ -73,5 +73,40 @@ namespace GraphLab.Core
                 .ToHashSet();
         }
 
+        public int[,] AdjacencyMatrix()
+        {
+            int[,] res = new int[Verticies.Count, Verticies.Count];
+            
+            int i = 0;
+            foreach(var vert in Verticies)
+            {
+                foreach(var adj in this[vert])
+                {
+                    int j = 0;
+                    foreach (var v in Verticies)
+                    {
+                        if(adj.Id == v.Id) 
+                            res[i, j] = 1;
+                        j++;
+                    }
+                }
+                i++;
+            }
+                  
+            return res;
+        }
+
+        public int[,] ReachabilityMatrix()
+        {
+            int[,] res = AdjacencyMatrix();
+            int N = Verticies.Count;
+
+            for (int k = 0; k < N; k++)
+                for (int i = 0; i < N; i++)
+                    for (int j = 0; j < N; j++)
+                        res[i,j] = (res[i,j] | (res[i,k] & res[k,j]));
+
+            return res;
+        }
     }
 }

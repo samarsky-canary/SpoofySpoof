@@ -13,7 +13,7 @@ namespace GraphLab.Blazor.Model
         public ModelService()
         {
             Graph = new Graph<City, Road>();
-            Generate(6);
+            Generate(7);
         }
 
         public void Generate(int vertexCount)
@@ -32,7 +32,7 @@ namespace GraphLab.Blazor.Model
             {
                 foreach (var to in Graph.Verticies)
                 {
-                    if(from != to && faker.Random.Double() < 0.5)
+                    if(from != to && faker.Random.Double() < 0.3)
                     {
                         var edge = Graph.CreateEdge(from, to);
                         edge.Price = faker.Random.Decimal(min: 100, max: 1000);

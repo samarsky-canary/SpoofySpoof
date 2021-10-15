@@ -4,6 +4,10 @@ using GraphLab.Core.Algorithms.Search;
 using Microsoft.JSInterop;
 using System.Linq;
 using System.Threading.Tasks;
+using Bogus;
+using System.Drawing;
+using System;
+using System.Collections.Generic;
 
 namespace GraphLab.Blazor.Utils
 {
@@ -59,6 +63,32 @@ namespace GraphLab.Blazor.Utils
                         _ => "lightblue"
                     }
                 });
+        }
+
+        public static async Task UpdateStrongComp(this IJSRuntime jsRuntime, List<City[]> cities)
+        {
+            for (int i = 0; i < cities.Count; i++)
+            {
+                foreach (var c in cities[i])
+                {
+                    await jsRuntime.InvokeVoidAsync("updateVertex",
+                    new
+                    {
+                        id = c.Id,
+                        label = c.Name,
+                        color = i switch
+                        {
+                            0 => "green",
+                            1 => "pink",
+                            2 => "yellow",
+                            3 => "blue",
+                            4 => "lightblue",
+                            5 => "lightgreen",
+                            _ => "red"
+                        }
+                    }) ;
+                }
+            }
         }
     }
 }
