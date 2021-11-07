@@ -44,9 +44,11 @@
     /// <returns></returns>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+
         if (firstRender)
         {
-            await JSRuntime.BindGraph(ModelService.Graph);
+            ModelService.Generate(7, true, 100, 1000);
+            await JSRuntime.BindGraph(ModelService.Graph, true);
         }
 
         if(PaintComponent)

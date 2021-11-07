@@ -1,0 +1,37 @@
+﻿@page "/Zadanie3"
+@using System.Threading
+@using GraphLab.Core
+@using GraphLab.Core.Algorithms
+@using GraphLab.Core.Algorithms.Search
+@using GraphLab.Core.Algorithms.Utils
+
+<div id="graph" style="height:60vh"></div>
+
+
+
+@code {
+
+    [Inject]
+    public ModelService ModelService { get; set; }
+
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+
+    /// <summary>
+    /// Привязка данных графа к визуальному отображению
+    /// </summary>
+    /// <param name="firstRender"></param>
+    /// <returns></returns>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        if (firstRender)
+        {
+            ModelService.Generate(7, false, 1, 10);
+            await JSRuntime.BindGraph(ModelService.Graph, false);
+        }
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+}

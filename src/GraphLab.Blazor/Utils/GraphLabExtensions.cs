@@ -20,7 +20,7 @@ namespace GraphLab.Blazor.Utils
         /// <param name="jsRuntime"></param>
         /// <param name="graph"></param>
         /// <returns></returns>
-        public static async Task BindGraph(this IJSRuntime jsRuntime, Graph<City, Road> graph)
+        public static async Task BindGraph(this IJSRuntime jsRuntime, Graph<City, Road> graph, bool orientir)
         {
             var vertecies = graph.Verticies
                 .Select(x => new
