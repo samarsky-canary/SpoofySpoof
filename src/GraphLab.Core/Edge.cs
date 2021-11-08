@@ -1,4 +1,6 @@
-﻿namespace GraphLab.Core
+﻿using System;
+
+namespace GraphLab.Core
 {
     /// <summary>
     /// Обобщенное ребро
@@ -7,7 +9,10 @@
     public interface IEdge <TVertex>
         where TVertex : class, IVertex
     {
+        Guid Id { get; set; }
         TVertex From { get; set; }
         TVertex To { get; set; }
+
+        int Price { get; set; }
     }
 }

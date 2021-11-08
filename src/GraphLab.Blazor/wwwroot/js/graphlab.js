@@ -23,3 +23,7 @@ function bindGraph(nodes, edges) {
 function updateVertex(vertex) {
     nodesDS.update(vertex);
 }
+
+function updateEdge(edge) {
+    edgesDS.update(edge);
+}

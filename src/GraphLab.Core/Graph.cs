@@ -44,7 +44,8 @@ namespace GraphLab.Core
             var edge = new TEdge
             {
                 From = from,
-                To = to
+                To = to,
+                Id = System.Guid.NewGuid(),
             };
             Edges.Add(edge);
             return edge;

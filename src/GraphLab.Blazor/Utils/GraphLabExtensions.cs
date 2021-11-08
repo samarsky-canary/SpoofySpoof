@@ -30,16 +30,34 @@ namespace GraphLab.Blazor.Utils
                     color = "lightblue"
                 }).ToArray();
 
-            var edges = graph.Edges
-                .Select(x => new
-                {
-                    from = x.From.Id,
-                    to = x.To.Id,
-                    arrows = "to",
-                    label = x.Price.ToString("N2")
-                }).ToArray();
+            if (orientir)
+            {
+                var edges = graph.Edges
+                    .Select(x => new
+                    {
+                        id = x.Id,
+                        from = x.From.Id,
+                        to = x.To.Id,
+                        arrows = "to",
+                        label = x.Price.ToString()
+                    }).ToArray();
 
-            await jsRuntime.InvokeVoidAsync("bindGraph", vertecies, edges);
+                await jsRuntime.InvokeVoidAsync("bindGraph", vertecies, edges);
+            }
+            else
+            {
+                var edges = graph.Edges
+                    .Select(x => new
+                    {
+                        id = x.Id,
+                        from = x.From.Id,
+                        to = x.To.Id,
+                        line = "to",
+                        label = x.Price.ToString()
+                    }).ToArray();
+
+                await jsRuntime.InvokeVoidAsync("bindGraph", vertecies, edges);
+            }
         }
 
         /// <summary>
@@ -64,6 +82,25 @@ namespace GraphLab.Blazor.Utils
                     }
                 });
         }
+
+        public static async Task UpdateEdge(this IJSRuntime jsRuntime, List<Road> edges, bool orientir)
+        {
+            foreach (var ed in edges)
+            {
+                await jsRuntime.InvokeVoidAsync("updateEdge",
+               new
+               {
+                   id = ed.Id,
+                   from = ed.From.Id,
+                   to = ed.To.Id,
+                   line = "to",
+                   label = ed.Price.ToString(),
+                   color = "green",
+               });
+            }
+        }
+
+
 
         public static async Task UpdateStrongComp(this IJSRuntime jsRuntime, List<City[]> cities)
         {

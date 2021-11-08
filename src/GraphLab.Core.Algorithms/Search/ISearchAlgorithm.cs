@@ -20,5 +20,6 @@ namespace GraphLab.Core.Algorithms.Search
         /// Состояния вершин
         /// </summary>
         StateManager<TVertex, SearchState> States { get; }
+
     }
 }
