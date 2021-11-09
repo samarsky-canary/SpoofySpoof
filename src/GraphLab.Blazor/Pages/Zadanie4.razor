@@ -1,35 +1,44 @@
-﻿@page "/"
+﻿@page "/Zadanie4"
 @using System.Threading
+@using GraphLab.Core
 @using GraphLab.Core.Algorithms
 @using GraphLab.Core.Algorithms.Search
 @using GraphLab.Core.Algorithms.Utils
 
-<div id="graph" style="height:90vh"></div>
+<div id="graph" style="height:60vh"></div>
 
-<button @onclick="RunDFS">Поиск в глубину</button>
+<button @onclick="RunDeikstra">Алгоритм Дейкстры</button>
 
-<button @onclick="RunBFS">Поиск в ширину</button>
+<button @onclick="RunBellmanFord">Алгоритм Беллмана-Форда</button>
 
-<button @onclick="NextStep" disabled="@(CurrentStep == null)">Следующий шаг</button>
+<button @onclick="NextStep" disabled="@(CurrentStep == null || paintList == true)">Следующий шаг</button>
 
-@code{
+<div id="graph-matrix">
+    @if (paintList)
+    {
+        <ForBellmanFord Cities="@ModelService.Graph.Verticies" list="@listLeng"></ForBellmanFord>
+    }
+
+</div>
+
+@code {
     [Inject]
     public ModelService ModelService { get; set; }
 
     [Inject]
     public IJSRuntime JSRuntime { get; set; }
 
+    public bool paintList { get; set; }
 
-    /// <summary>
-    /// Привязка данных графа к визуальному отображению
-    /// </summary>
-    /// <param name="firstRender"></param>
-    /// <returns></returns>
+    public List<List<int>> listLeng { get; set; }
+
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            ModelService.Generate(7, true, 100, 1000);
+
+            ModelService.Generate(7, true, 1, 10);
             await JSRuntime.BindGraph(ModelService.Graph, true);
         }
         else
@@ -37,9 +46,10 @@
             foreach (var vertex in ModelService.Graph.Verticies)
             {
                 await JSRuntime.UpdateVertex(vertex,
-                    (Algorithm?.States != null) ? Algorithm.States[vertex] : SearchState.None, false);
+                    (Algorithm?.States != null) ? Algorithm.States[vertex] : SearchState.None, true);
             }
         }
+
         await base.OnAfterRenderAsync(firstRender);
     }
 
@@ -53,29 +63,23 @@
     /// </summary>
     public AlgorithmStep CurrentStep { get; private set; }
 
-    /// <summary>
-    /// Запуск поиска в глубину
-    /// </summary>
-    protected void RunDFS()
-    {
 
-        Algorithm = new DFS<City, Road>(
+    protected void RunDeikstra()
+    {
+        paintList = false;
+        Algorithm = new AlgDeikstra<City, Road>(
             ModelService.Graph,
             ModelService.Graph.Verticies.First());
 
         CurrentStep = Algorithm.Begin();
     }
 
-    /// <summary>
-    /// Запуск поиска в ширину
-    /// </summary>
-    protected void RunBFS()
+    protected void RunBellmanFord()
     {
-        Algorithm = new BFS<City, Road>(
-            ModelService.Graph,
-            ModelService.Graph.Verticies.First());
-
-        CurrentStep = Algorithm.Begin();
+        AlgBellmanFord<City, Road> p = new AlgBellmanFord<City, Road>(ModelService.Graph);
+        listLeng = p.Begin();
+        StateHasChanged();
+        paintList = true;
     }
 
     /// <summary>
@@ -86,4 +90,13 @@
         CurrentStep = CurrentStep();
         StateHasChanged();
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        listLeng = null;
+        paintList = false;
+        await base.OnInitializedAsync();
+    }
+
+
 }

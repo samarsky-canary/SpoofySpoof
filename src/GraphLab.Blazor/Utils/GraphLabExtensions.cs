@@ -67,9 +67,11 @@ namespace GraphLab.Blazor.Utils
         /// <param name="vertex"></param>
         /// <param name="state"></param>
         /// <returns></returns>
-        public static async Task UpdateVertex(this IJSRuntime jsRuntime, City vertex, SearchState state)
+        public static async Task UpdateVertex(this IJSRuntime jsRuntime, City vertex, SearchState state, bool lenghtV)
         {
-            await jsRuntime.InvokeVoidAsync("updateVertex",
+            if(!lenghtV)
+            {
+                await jsRuntime.InvokeVoidAsync("updateVertex",
                 new
                 {
                     id = vertex.Id,
@@ -81,6 +83,23 @@ namespace GraphLab.Blazor.Utils
                         _ => "lightblue"
                     }
                 });
+            }
+            else
+            {
+                string lenght = (vertex.Lenght < -1000 || vertex.Lenght > 1000) ? vertex.Name + " ..." : vertex.Name + " " + vertex.Lenght;
+                await jsRuntime.InvokeVoidAsync("updateVertex",
+                new
+                {
+                    id = vertex.Id,
+                    label = lenght,
+                    color = state switch
+                    {
+                        SearchState.Current => "pink",
+                        SearchState.Visited => "lightgreen",
+                        _ => "lightblue"
+                    }
+                });
+            }
         }
 
         public static async Task UpdateEdge(this IJSRuntime jsRuntime, List<Road> edges, bool orientir)

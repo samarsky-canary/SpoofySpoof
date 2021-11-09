@@ -8,5 +8,6 @@ namespace GraphLab.Core
     public interface IVertex
     {
         Guid Id { get; set; }
+        public int Lenght { get; set; }
     }
 }

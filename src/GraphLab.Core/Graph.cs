@@ -28,7 +28,7 @@ namespace GraphLab.Core
         /// <returns></returns>
         public TVertex CreateVertex()
         {
-            var vertex = new TVertex { Id = System.Guid.NewGuid() };
+            var vertex = new TVertex { Id = System.Guid.NewGuid(), Lenght = int.MaxValue };
             Verticies.Add(vertex);
             return vertex;
         }
@@ -45,7 +45,7 @@ namespace GraphLab.Core
             {
                 From = from,
                 To = to,
-                Id = System.Guid.NewGuid(),
+                Id = Guid.NewGuid(),
             };
             Edges.Add(edge);
             return edge;
